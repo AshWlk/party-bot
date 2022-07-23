@@ -43,8 +43,8 @@ namespace PartyBot.DiscordClient.Commands
             var gameInstance = await this._dbContext.GameInstsances.AddAsync(new Database.Entities.GameInstance
             {
                 WinnerUserId = ((SocketGuildUser)command.Data.Options.Single(o => o.Name == "winner").Value).Id,
-                GameId = (int)command.Data.Options.Single(o => o.Name == "game").Value,
-                BoardId = (int)command.Data.Options.Single(o => o.Name == "board").Value,
+                GameId = (long)command.Data.Options.Single(o => o.Name == "game").Value,
+                BoardId = (long)command.Data.Options.Single(o => o.Name == "board").Value,
                 Date = DateTimeOffset.UtcNow
             });
 

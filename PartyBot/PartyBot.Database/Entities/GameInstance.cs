@@ -9,10 +9,10 @@ namespace PartyBot.Database.Entities
         public ulong? WinnerUserId { get; set; }
 
         [Required]
-        public int GameId { get; set; }
+        public long GameId { get; set; }
 
         [Required]
-        public int BoardId { get; set; }
+        public long BoardId { get; set; }
 
         public DateTimeOffset Date { get; set; }
     }
