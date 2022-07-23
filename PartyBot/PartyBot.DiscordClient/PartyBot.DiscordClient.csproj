@@ -10,4 +10,8 @@
     <PackageReference Include="Discord.Net" Version="3.7.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PartyBot.Database\PartyBot.Database.csproj" />
+  </ItemGroup>
+
 </Project>

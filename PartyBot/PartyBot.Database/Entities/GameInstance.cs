@@ -6,12 +6,14 @@ namespace PartyBot.Database.Entities
     [Table("GameInstance")]
     public class GameInstance : BaseEntity
     {
-        public uint? WinnerUserId { get; set; }
+        public ulong? WinnerUserId { get; set; }
 
         [Required]
-        public Guid GameId { get; set; }
+        public int GameId { get; set; }
 
         [Required]
-        public Guid BoardId { get; set; }
+        public int BoardId { get; set; }
+
+        public DateTimeOffset Date { get; set; }
     }
 }

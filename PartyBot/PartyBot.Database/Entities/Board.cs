@@ -11,7 +11,7 @@ namespace PartyBot.Database.Entities
         public string Name { get; set; }
 
         [Required]
-        public Guid GameId { get; set; }
+        public int GameId { get; set; }
 
         [ForeignKey("GameId")]
         public Game Game { get; set; }

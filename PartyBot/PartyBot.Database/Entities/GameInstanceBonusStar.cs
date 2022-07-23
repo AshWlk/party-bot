@@ -7,8 +7,11 @@ namespace PartyBot.Database.Entities
     public class GameInstanceBonusStar : BaseEntity
     {
         [Required]
-        public Guid BonusStarId { get; set; }
+        public int GameInstanceId { get; set; }
 
-        public uint? WinnerUserId { get; set; }
+        [Required]
+        public int BonusStarId { get; set; }
+
+        public ulong? WinnerUserId { get; set; }
     }
 }

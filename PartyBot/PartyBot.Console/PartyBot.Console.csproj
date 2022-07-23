@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PartyBot.Database\PartyBot.Database.csproj" />
     <ProjectReference Include="..\PartyBot.DiscordClient\PartyBot.DiscordClient.csproj" />
   </ItemGroup>
 

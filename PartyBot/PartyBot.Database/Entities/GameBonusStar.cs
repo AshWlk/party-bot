@@ -7,10 +7,10 @@ namespace PartyBot.Database.Entities
     public class GameBonusStar : BaseEntity
     {
         [Required]
-        public Guid GameId { get; set; }
+        public int GameId { get; set; }
 
         [Required]
-        public Guid BonusStarId { get; set; }
+        public int BonusStarId { get; set; }
 
         [ForeignKey("GameId")]
         public Game Game { get; set; }

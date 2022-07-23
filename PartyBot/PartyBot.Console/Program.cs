@@ -1,9 +1,18 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using PartyBot.DiscordClient.Enums;
-using PartyBot.DiscordClient.Extensions;
+using Microsoft.EntityFrameworkCore;
+using PartyBot.Database;
+using PartyBot.DiscordClient.Commands;
+
+var _context = new PartyBotDbContext(options => options.UseSqlServer(@"Server=.;Database=PartyBot5;Integrated Security=True;"));
+_context.Database.EnsureCreated();
 
 var _client = new DiscordSocketClient();
+
+var _commands = new[]
+{
+    new AddMatch(_context)
+};
 
 _client.Log += Client_Log;
 _client.SlashCommandExecuted += Client_SlashCommandExecuted;
@@ -13,14 +22,11 @@ await _client.LoginAsync(Discord.TokenType.Bot, "");
 await _client.StartAsync();
 await Task.Delay(-1);
 
-static async Task Client_SlashCommandExecuted(SocketSlashCommand command)
+async Task Client_SlashCommandExecuted(SocketSlashCommand command)
 {
     await command.DeferAsync(true);
-    await Task.Delay(1000);
-    await command.ModifyOriginalResponseAsync((message) =>
-    {
-        message.Content = "Hello world";
-    });
+    var action = await _commands.Single(c => c.Name == command.CommandName).HandleAsync(command);
+    await command.ModifyOriginalResponseAsync(action);
 }
 
 static Task Client_Log(LogMessage arg)
@@ -31,20 +37,9 @@ static Task Client_Log(LogMessage arg)
 
 async Task Client_Ready()
 {
-    var command = new SlashCommandBuilder()
-        .WithName("add-match")
-        .WithDescription("Logs the results of a match")
-        .AddOption("winner", ApplicationCommandOptionType.User, "The winner of the match", isRequired: true)
-        .AddOption(new SlashCommandOptionBuilder()
-            .WithName("game")
-            .WithDescription("The version of Mario Party that was played")
-            .WithRequired(true)
-            .WithType(ApplicationCommandOptionType.Integer)
-            .AddChoicesFromEnum<MarioPartyGames>())
-        .Build();
-
-
-
-    await _client.CreateGlobalApplicationCommandAsync(command);
+    foreach (var command in _commands)
+    {
+        await _client.CreateGlobalApplicationCommandAsync(command.GetBuilder().Build());
+    }
 }
 
