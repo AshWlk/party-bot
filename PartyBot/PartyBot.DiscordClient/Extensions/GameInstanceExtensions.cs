@@ -10,18 +10,26 @@ namespace PartyBot.DiscordClient.Extensions
         public static async Task<EmbedBuilder> GetEmbedBuilder(this GameInstance gameInstance, SocketGuildUser? user, DiscordSocketClient client)
         {
             var embedBuilder = new EmbedBuilder()
-                .AddField("Winner", user?.DisplayName)
+                .AddField("Winner", user?.Nickname ?? "CPU")
                 .AddField("Game", ((MarioPartyGames)gameInstance.GameId).GetDescription())
                 .AddField("Board", ((MarioPartyBoards)gameInstance.BoardId).GetDescription())
                 .WithColor(Color.Blue)
                 .WithTimestamp(gameInstance.Date);
 
-            foreach (var bonusStarWinner in gameInstance.GameInstanceBonusStars.GroupBy(x => x.WinnerUserId))
+            var bonusStarWinnerUserIds = gameInstance.GameInstanceBonusStars.Select(x => x.WinnerUserId).Distinct();
+            var bonusStarWinners = new List<IUser?>();
+
+            foreach (var bonusStarWinnerUserId in bonusStarWinnerUserIds)
             {
-                foreach (var bonusStar in bonusStarWinner)
-                {
-                    embedBuilder.AddField(((MarioPartyBonusStars)bonusStar.BonusStarId).GetDescription(), await GetUserNameFromId(bonusStarWinner.Key, client));
-                }
+                bonusStarWinners.Add(await GetUser(bonusStarWinnerUserId, client));
+            }
+
+            foreach (var bonusStar in gameInstance.GameInstanceBonusStars.GroupBy(x => x.BonusStarId))
+            {
+                var winners = string.Join(", ", bonusStarWinners.Where(x => BonusStarWinnerPredicate(x, bonusStar)).Select(x => x?.Username ?? "CPU"));
+                var bonusStarName = ((MarioPartyBonusStars)bonusStar.Key).GetDescription();
+
+                embedBuilder.AddField(bonusStarName, winners);
             }
 
             if (user != null)
@@ -32,14 +40,19 @@ namespace PartyBot.DiscordClient.Extensions
             return embedBuilder;
         }
 
-        private static async Task<string> GetUserNameFromId(string? userId, DiscordSocketClient client)
+        private static async Task<IUser?> GetUser(string? userId, DiscordSocketClient client)
         {
             if (userId == null)
             {
-                return "CPU";
+                return null;
             }
 
-            return (await client.GetUserAsync(ulong.Parse(userId))).Username;
+            return (await client.GetUserAsync(ulong.Parse(userId)));
+        }
+
+        private static bool BonusStarWinnerPredicate(IUser? user, IEnumerable<GameInstanceBonusStar> bonusStars)
+        {
+            return bonusStars.Select(x => x.WinnerUserId).Contains(user?.Id.ToString());
         }
     }
 }
