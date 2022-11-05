@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PartyBot.Database.Entities;
-using PartyBot.Database.Helpers;
 
 namespace PartyBot.Database
 {
@@ -20,7 +19,11 @@ namespace PartyBot.Database
 
         public DbSet<GameBonusStar> GameBonusStars { get; set;}
 
-        public PartyBotDbContext(Action<DbContextOptionsBuilder<PartyBotDbContext>> options) : base(DbContextOptionsFactory.Build(options))
+        public PartyBotDbContext() : base()
+        {
+        }
+
+        public PartyBotDbContext(DbContextOptions<PartyBotDbContext> options) : base(options)
         {
         }
     }
