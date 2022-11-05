@@ -10,10 +10,12 @@ namespace PartyBot.DiscordClient.Commands
     public class AddMatch : ICommand
     {
         private readonly PartyBotDbContext _dbContext;
+        private readonly DiscordSocketClient _client;
 
-        public AddMatch(PartyBotDbContext dbContext)
+        public AddMatch(PartyBotDbContext dbContext, DiscordSocketClient client)
         {
             this._dbContext = dbContext;
+            this._client = client;
         }
 
         public string Name => "add-match";
@@ -40,17 +42,19 @@ namespace PartyBot.DiscordClient.Commands
 
         public async Task<Action<MessageProperties>> HandleAsync(SocketSlashCommand command)
         {
+            var winningUser = (SocketGuildUser)command.Data.Options.Single(o => o.Name == "winner").Value;
+
             var gameInstance = await this._dbContext.GameInstsances.AddAsync(new Database.Entities.GameInstance
             {
-                WinnerUserId = ((SocketGuildUser)command.Data.Options.Single(o => o.Name == "winner").Value).Id,
+                WinnerUserId = winningUser?.Id.ToString(),
                 GameId = (long)command.Data.Options.Single(o => o.Name == "game").Value,
                 BoardId = (long)command.Data.Options.Single(o => o.Name == "board").Value,
                 Date = DateTimeOffset.UtcNow
             });
 
-            return (message) =>
+            return async (message) =>
             {
-                message.Content = $"Board: {gameInstance.Entity.BoardId}, Game: {gameInstance.Entity.BoardId}";
+                message.Embed = (await gameInstance.Entity.GetEmbedBuilder(winningUser, this._client)).Build();
             };
         }
     }

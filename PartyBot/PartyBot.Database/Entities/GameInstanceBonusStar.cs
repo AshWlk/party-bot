@@ -10,8 +10,12 @@ namespace PartyBot.Database.Entities
         public int GameInstanceId { get; set; }
 
         [Required]
-        public int BonusStarId { get; set; }
+        public long BonusStarId { get; set; }
 
-        public ulong? WinnerUserId { get; set; }
+        [MaxLength(32)]
+        public string? WinnerUserId { get; set; }
+
+        [ForeignKey("GameInstanceId")]
+        public virtual GameInstance? GameInstance { get; set; }
     }
 }

@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PartyBot.DiscordClient.Test", "PartyBot.DiscordClient.Test\PartyBot.DiscordClient.Test.csproj", "{61B42940-F716-46D0-A396-4A999AFA040F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{966DE1F3-AE6D-4684-B7C5-16CD2321573D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{966DE1F3-AE6D-4684-B7C5-16CD2321573D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{966DE1F3-AE6D-4684-B7C5-16CD2321573D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61B42940-F716-46D0-A396-4A999AFA040F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61B42940-F716-46D0-A396-4A999AFA040F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61B42940-F716-46D0-A396-4A999AFA040F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61B42940-F716-46D0-A396-4A999AFA040F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

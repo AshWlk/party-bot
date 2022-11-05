@@ -8,12 +8,12 @@ namespace PartyBot.Database.Entities
     {
         [Required]
         [MaxLength(64)]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [Required]
         public int GameId { get; set; }
 
         [ForeignKey("GameId")]
-        public Game Game { get; set; }
+        public Game? Game { get; set; }
     }
 }

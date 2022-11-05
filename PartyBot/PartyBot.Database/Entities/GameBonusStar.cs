@@ -13,10 +13,10 @@ namespace PartyBot.Database.Entities
         public int BonusStarId { get; set; }
 
         [ForeignKey("GameId")]
-        public Game Game { get; set; }
+        public Game? Game { get; set; }
 
         [ForeignKey("BonusStarId")]
-        public BonusStar BonusStar { get; set; }
+        public BonusStar? BonusStar { get; set; }
 
     }
 }

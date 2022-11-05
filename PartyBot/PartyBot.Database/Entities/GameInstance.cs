@@ -6,7 +6,8 @@ namespace PartyBot.Database.Entities
     [Table("GameInstance")]
     public class GameInstance : BaseEntity
     {
-        public ulong? WinnerUserId { get; set; }
+        [MaxLength(32)]
+        public string? WinnerUserId { get; set; }
 
         [Required]
         public long GameId { get; set; }
@@ -15,5 +16,8 @@ namespace PartyBot.Database.Entities
         public long BoardId { get; set; }
 
         public DateTimeOffset Date { get; set; }
+
+        [InverseProperty("GameInstance")]
+        public virtual ICollection<GameInstanceBonusStar> GameInstanceBonusStars { get; set; } = new HashSet<GameInstanceBonusStar>();
     }
 }

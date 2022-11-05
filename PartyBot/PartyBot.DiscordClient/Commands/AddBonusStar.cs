@@ -11,10 +11,12 @@ namespace PartyBot.DiscordClient.Commands
     public class AddBonusStar : ICommand
     {
         private readonly PartyBotDbContext _dbContext;
+        private readonly DiscordSocketClient _client;
 
-        public AddBonusStar(PartyBotDbContext dbContext)
+        public AddBonusStar(PartyBotDbContext dbContext, DiscordSocketClient client)
         {
             this._dbContext = dbContext;
+            this._client = client;
         }
 
         public string Name => "add-bonus-star";
@@ -36,19 +38,22 @@ namespace PartyBot.DiscordClient.Commands
         public async Task<Action<MessageProperties>> HandleAsync(SocketSlashCommand command)
         {
             var gameInstance = await this._dbContext.GameInstsances
+                .Include(x => x.GameInstanceBonusStars)
                 .OrderByDescending(g => g.Date)
                 .FirstAsync();
 
-            var gameInstanceBonusStar = await this._dbContext.GameInstanceBonusStars.AddAsync(new Database.Entities.GameInstanceBonusStar
+            var winningUser = (SocketGuildUser)command.Data.Options.Single(o => o.Name == "winner").Value;
+
+            gameInstance.GameInstanceBonusStars.Add(new()
             {
-                WinnerUserId = ((SocketGuildUser)command.Data.Options.Single(o => o.Name == "winner").Value).Id,
-                BonusStarId = (int)command.Data.Options.Single(o => o.Name == "bonus-star").Value,
+                WinnerUserId = winningUser?.Id.ToString(),
+                BonusStarId = (long)command.Data.Options.Single(o => o.Name == "bonus-star").Value,
                 GameInstanceId = gameInstance.Id
             });
 
-            return (message) =>
+            return async (message) =>
             {
-                message.Content = $"Bonus Star: {gameInstanceBonusStar.Entity.BonusStarId}, Match ID: {gameInstanceBonusStar.Entity.GameInstanceId}";
+                message.Embed = (await gameInstance.GetEmbedBuilder(winningUser, this._client)).Build();
             };
         }
     }

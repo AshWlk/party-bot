@@ -3,6 +3,7 @@ using PartyBot.Database.Entities;
 
 namespace PartyBot.Database
 {
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public class PartyBotDbContext : DbContext
     {
         public DbSet<Board> Matches { get; set; }
@@ -17,7 +18,7 @@ namespace PartyBot.Database
 
         public DbSet<Game> Games { get; set; }
 
-        public DbSet<GameBonusStar> GameBonusStars { get; set;}
+        public DbSet<GameBonusStar> GameBonusStars { get; set; }
 
         public PartyBotDbContext() : base()
         {
@@ -26,5 +27,6 @@ namespace PartyBot.Database
         public PartyBotDbContext(DbContextOptions<PartyBotDbContext> options) : base(options)
         {
         }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     }
 }

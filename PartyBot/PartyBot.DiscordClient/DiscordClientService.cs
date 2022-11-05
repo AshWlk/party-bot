@@ -13,31 +13,35 @@ namespace PartyBot.DiscordClient
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<DiscordClientService> _logger;
+        private readonly DiscordSocketClient _client;
 
-        private DiscordSocketClient _discordSocketClient;
-
-        public DiscordClientService(IServiceProvider serviceProvider, ILogger<DiscordClientService> logger)
+        public DiscordClientService(IServiceProvider serviceProvider, ILogger<DiscordClientService> logger, DiscordSocketClient client)
         {
             this._serviceProvider = serviceProvider;
             this._logger = logger;
+            this._client = client;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            this._discordSocketClient = new();
-            await this._discordSocketClient.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("$BOT_TOKEN"));
-            await this._discordSocketClient.StartAsync();
+            using var scope = this._serviceProvider.CreateAsyncScope();
 
-            this._discordSocketClient.Log += this.DiscordSocketClient_Log;
-            this._discordSocketClient.SlashCommandExecuted += this.DiscordSocketClient_SlashCommandExecuted;
-            this._discordSocketClient.Ready += DiscordSocketClient_Ready;
+            var dbContext = scope.ServiceProvider.GetRequiredService<PartyBotDbContext>();
+            await dbContext.Database.EnsureCreatedAsync(cancellationToken);
+
+            await this._client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("$BOT_TOKEN"));
+            await this._client.StartAsync();
+
+            this._client.Log += this.DiscordSocketClient_Log;
+            this._client.SlashCommandExecuted += this.DiscordSocketClient_SlashCommandExecuted;
+            this._client.Ready += DiscordSocketClient_Ready;
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            await this._discordSocketClient.LogoutAsync();
-            await this._discordSocketClient.StopAsync();
-            await this._discordSocketClient.DisposeAsync();
+            await this._client.LogoutAsync();
+            await this._client.StopAsync();
+            await this._client.DisposeAsync();
         }
 
         private async Task DiscordSocketClient_SlashCommandExecuted(SocketSlashCommand arg)
@@ -58,7 +62,7 @@ namespace PartyBot.DiscordClient
             using var scope = this._serviceProvider.CreateAsyncScope();
             var commands = scope.ServiceProvider.GetServices<ICommand>();
 
-            foreach (var guild in _discordSocketClient.Guilds)
+            foreach (var guild in _client.Guilds)
             {
                 await guild.BulkOverwriteApplicationCommandAsync(commands.Select(c => c.GetBuilder().Build()).ToArray());
             }
