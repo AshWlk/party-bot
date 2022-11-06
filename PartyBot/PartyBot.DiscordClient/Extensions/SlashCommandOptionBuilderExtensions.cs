@@ -19,7 +19,7 @@ namespace PartyBot.DiscordClient.Extensions
                 {
                     throw new InvalidOperationException($"All members of the enum {nameof(TEnum)} must be decorated with the {nameof(DescriptionAttribute)}");
                 }
-                
+
                 commandOptionBuilder.AddChoice(attribute.Description, (int)value);
             }
 

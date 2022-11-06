@@ -25,7 +25,7 @@ namespace PartyBot.DiscordClient.Commands
             return new SlashCommandBuilder()
                 .WithName("add-match")
                 .WithDescription("Logs the results of a match")
-                .AddOption("winner", ApplicationCommandOptionType.User, "The winner of the match", isRequired: true)
+                .AddOption("winner", ApplicationCommandOptionType.User, "The winner of the match", isRequired: false)
                 .AddOption(new SlashCommandOptionBuilder()
                     .WithName("game")
                     .WithDescription("The version of Mario Party that was played")
@@ -42,7 +42,7 @@ namespace PartyBot.DiscordClient.Commands
 
         public async Task<Action<MessageProperties>> HandleAsync(SocketSlashCommand command)
         {
-            var winningUser = (SocketGuildUser)command.Data.Options.Single(o => o.Name == "winner").Value;
+            var winningUser = (SocketGuildUser?)command.Data.Options.SingleOrDefault(o => o.Name == "winner")?.Value;
 
             var gameInstance = await this._dbContext.GameInstsances.AddAsync(new Database.Entities.GameInstance
             {

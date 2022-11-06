@@ -26,7 +26,7 @@ namespace PartyBot.DiscordClient.Commands
             return new SlashCommandBuilder()
                 .WithName(this.Name)
                 .WithDescription("Adds a bonus star to the most recent match")
-                .AddOption("winner", ApplicationCommandOptionType.User, "The winner of the bonus star", isRequired: true)
+                .AddOption("winner", ApplicationCommandOptionType.User, "The winner of the bonus star", isRequired: false)
                 .AddOption(new SlashCommandOptionBuilder()
                     .WithName("bonus-star")
                     .WithDescription("The bonus star that was awarded")
@@ -42,7 +42,7 @@ namespace PartyBot.DiscordClient.Commands
                 .OrderByDescending(g => g.Date)
                 .FirstAsync();
 
-            var winningUser = (SocketGuildUser)command.Data.Options.Single(o => o.Name == "winner").Value;
+            var winningUser = (SocketGuildUser?)command.Data.Options.SingleOrDefault(o => o.Name == "winner")?.Value;
 
             gameInstance.GameInstanceBonusStars.Add(new()
             {
