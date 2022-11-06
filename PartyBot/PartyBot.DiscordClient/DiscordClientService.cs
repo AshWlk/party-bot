@@ -47,14 +47,26 @@ namespace PartyBot.DiscordClient
         private async Task DiscordSocketClient_SlashCommandExecuted(SocketSlashCommand arg)
         {
             await arg.DeferAsync();
-            using var scope = this._serviceProvider.CreateAsyncScope();
 
-            var command = scope.ServiceProvider.GetServices<ICommand>().Single(c => c.Name == arg.CommandName);
-            var dbContext = scope.ServiceProvider.GetRequiredService<PartyBotDbContext>();
+            try
+            {
+                using var scope = this._serviceProvider.CreateAsyncScope();
 
-            var action = await command.HandleAsync(arg);
-            await arg.ModifyOriginalResponseAsync(action);
-            await dbContext.SaveChangesAsync();
+                var command = scope.ServiceProvider.GetServices<ICommand>().Single(c => c.Name == arg.CommandName);
+                var dbContext = scope.ServiceProvider.GetRequiredService<PartyBotDbContext>();
+
+                var action = await command.HandleAsync(arg);
+                await arg.ModifyOriginalResponseAsync(action);
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex, "{Exception}", ex.Message);
+                await arg.ModifyOriginalResponseAsync(message =>
+                {
+                    message.Content = "PartyBot encountered an error. Please try again later.";
+                });
+            }
         }
 
         private async Task DiscordSocketClient_Ready()
