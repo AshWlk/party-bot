@@ -13,7 +13,7 @@ namespace PartyBot.DiscordClient.Enums
         [Description("Peach's Birthday Cake")]
         PeachsBirthdayCake,
 
-        [Description("WoodyWoods")]
+        [Description("Woody Woods")]
         WoodyWoods,
 
         [Description("Horror Land")]
