@@ -9,7 +9,7 @@ namespace PartyBot.Database
         {
             services.AddDbContext<PartyBotDbContext>(options =>
             {
-                options.UseSqlServer(@"Server=.;Database=PartyBot5;Integrated Security=True;");
+                options.UseSqlServer(@"Server=.;Database=PartyBot5;Integrated Security=True;TrustServerCertificate=true");
             });
         }
     }
