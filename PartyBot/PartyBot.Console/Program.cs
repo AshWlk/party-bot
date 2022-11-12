@@ -8,6 +8,7 @@ await Host
     .UseConsoleLifetime()
     .ConfigureAppConfiguration(configBuilder =>
     {
+        configBuilder.SetBasePath(AppDomain.CurrentDomain.BaseDirectory);
         configBuilder.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
         configBuilder.AddJsonFile("appsettings.local.json", optional: true, reloadOnChange: true);
     })
