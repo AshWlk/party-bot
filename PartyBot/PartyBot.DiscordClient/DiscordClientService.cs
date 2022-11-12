@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -13,12 +14,14 @@ namespace PartyBot.DiscordClient
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<DiscordClientService> _logger;
+        private readonly IConfiguration _configuration;
         private readonly DiscordSocketClient _client;
 
-        public DiscordClientService(IServiceProvider serviceProvider, ILogger<DiscordClientService> logger, DiscordSocketClient client)
+        public DiscordClientService(IServiceProvider serviceProvider, ILogger<DiscordClientService> logger, IConfiguration configuration, DiscordSocketClient client)
         {
             this._serviceProvider = serviceProvider;
             this._logger = logger;
+            this._configuration = configuration;
             this._client = client;
         }
 
@@ -29,7 +32,7 @@ namespace PartyBot.DiscordClient
             var dbContext = scope.ServiceProvider.GetRequiredService<PartyBotDbContext>();
             await dbContext.Database.EnsureCreatedAsync(cancellationToken);
 
-            await this._client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("$BOT_TOKEN"));
+            await this._client.LoginAsync(TokenType.Bot, this._configuration.GetRequiredSection("DiscordClientToken").Value);
             await this._client.StartAsync();
 
             this._client.Log += this.DiscordSocketClient_Log;
