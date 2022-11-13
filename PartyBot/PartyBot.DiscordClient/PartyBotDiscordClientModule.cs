@@ -13,6 +13,7 @@ namespace PartyBot.DiscordClient
             services.AddHostedService<DiscordClientService>();
             services.AddScoped<ICommand, AddBonusStar>();
             services.AddScoped<ICommand, AddMatch>();
+            services.AddScoped<ICommand, ListMatches>();
         }
     }
 }

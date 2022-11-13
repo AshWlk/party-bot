@@ -23,7 +23,7 @@ namespace PartyBot.DiscordClient.Commands
         public SlashCommandBuilder GetBuilder()
         {
             return new SlashCommandBuilder()
-                .WithName("add-match")
+                .WithName(this.Name)
                 .WithDescription("Logs the results of a match")
                 .AddOption("winner", ApplicationCommandOptionType.User, "The winner of the match", isRequired: false)
                 .AddOption(new SlashCommandOptionBuilder()

@@ -49,7 +49,7 @@ namespace PartyBot.DiscordClient.Extensions
 
             foreach (var userId in userIds.Distinct())
             {
-                await GetUserAsync(userId, client);
+                users.Add(await GetUserAsync(userId, client));
             }
 
             return users;
