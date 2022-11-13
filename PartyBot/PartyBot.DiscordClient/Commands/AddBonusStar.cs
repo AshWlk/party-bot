@@ -53,7 +53,7 @@ namespace PartyBot.DiscordClient.Commands
 
             return async (message) =>
             {
-                message.Embed = (await gameInstance.GetEmbedBuilder(winningUser, this._client)).Build();
+                message.Embed = await gameInstance.GetEmbedAsync(this._client);
             };
         }
     }
