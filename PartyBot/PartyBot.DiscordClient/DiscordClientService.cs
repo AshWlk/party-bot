@@ -49,7 +49,7 @@ namespace PartyBot.DiscordClient
 
         private async Task DiscordSocketClient_SlashCommandExecuted(SocketSlashCommand arg)
         {
-            await arg.DeferAsync();
+            await arg.DeferAsync(bool.Parse(this._configuration.GetSection("UseEphemeralResponse")?.Value ?? false.ToString()));
 
             try
             {
