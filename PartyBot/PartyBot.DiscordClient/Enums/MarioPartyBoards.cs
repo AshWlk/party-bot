@@ -31,12 +31,6 @@ namespace PartyBot.DiscordClient.Enums
         [Description("Mario's Rainbow Castle")]
         MariosRainbowCastle,
 
-        [Description("Bowser's Magma Mountain")]
-        BowsersMagmaMountain,
-
-        [Description("Eternal Star")]
-        EternalStar,
-
         [Description("Pirate Land")]
         PirateLand,
 
@@ -47,6 +41,42 @@ namespace PartyBot.DiscordClient.Enums
         MysteryLand,
 
         [Description("Bowser Land")]
-        BowserLand
+        BowserLand,
+
+        [Description("Towering Treetop")]
+        ToweringTreetop,
+
+        [Description("E. Gadd's Garage")]
+        EGaddsGarage,
+
+        [Description("Faire Square")]
+        FaireSquare,
+
+        [Description("Snowflake Lake")]
+        SnowflakeLake,
+
+        [Description("Castaway Bay")]
+        CastawayBay,
+
+        [Description("Clockwork Castle")]
+        ClockworkCastle,
+
+        [Description("Grand Canal")]
+        GrandCanal,
+
+        [Description("Pagoda Peak")]
+        PagodaPeak,
+
+        [Description("Pyarmid Park")]
+        PyramidPark,
+
+        [Description("Neon Heights")]
+        NeonHeights,
+
+        [Description("Windmillville")]
+        Windmillville,
+
+        [Description("Bowser's Enchanted Inferno")]
+        BowsersEnchantedInfrerno
     }
 }
